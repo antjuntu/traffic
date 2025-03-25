@@ -2,9 +2,9 @@ import cv2
 import numpy as np
 import os
 import sys
-#import tensorflow as tf
+import tensorflow as tf
 
-#from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split
 
 EPOCHS = 10
 IMG_WIDTH = 30
@@ -22,9 +22,10 @@ def main():
 
     # Get image arrays and labels for all image files
     #images, labels = load_data(sys.argv[1])
-    images, labels = load_data('gtsrb-small')
+    images, labels = load_data('gtsrb')
+    print(len(images), len(labels))
 
-    """
+    
     # Split data into training and testing sets
     labels = tf.keras.utils.to_categorical(labels)
     x_train, x_test, y_train, y_test = train_test_split(
@@ -45,7 +46,7 @@ def main():
         filename = sys.argv[2]
         model.save(filename)
         print(f"Model saved to {filename}.")
-    """
+    
 
 
 def load_data(data_dir):
@@ -63,13 +64,15 @@ def load_data(data_dir):
     be a list of integer labels, representing the categories for each of the
     corresponding `images`.
     """
+    images = []
+    labels = []
     root = os.getcwd()
     print('root', root)
     directory_str = os.path.join(root, data_dir)
     directory = os.fsencode(directory_str)
     for folder in os.listdir(directory):
         foldername = os.path.basename(folder)
-        print('foldername', foldername)
+        #print('foldername', foldername)
         try:
             label = int(foldername.decode('utf8'))
         except:
@@ -77,15 +80,22 @@ def load_data(data_dir):
 
         print(type(foldername), foldername, 'label(int):', label)
         inner_dir_str = os.path.join(root, data_dir, foldername.decode('utf8'))
-        print('inner_dir_str', inner_dir_str)
+        #print('inner_dir_str', inner_dir_str)
         inner_dir = os.fsdecode(inner_dir_str)
         
         for filename in os.listdir(inner_dir):
-            print('filename', type(filename), filename)
+            #print('filename', type(filename), filename)
             imgPath = os.path.join(inner_dir_str, filename)
-            print('imgPath', imgPath)
-        print('- - - - - - - - - - - -')
-        
+            #print('imgPath', imgPath)
+            img = cv2.imread(imgPath)
+            img_resized = cv2.resize(img, (IMG_WIDTH, IMG_HEIGHT))
+
+            images.append(img_resized)
+            labels.append(label)
+            # if filename == '00004_00029.ppm':
+            #     print('imgPath', imgPath)
+            #     print(type(img), img.shape)
+            #     print(img_resized.shape)
     
     # imgPath = os.path.join(root, data_dir, '0', '00000_00000.ppm')
     # print('imgPath', imgPath)
@@ -94,7 +104,7 @@ def load_data(data_dir):
     # cv2.imshow('img', img)
     # cv2.waitKey(0)
 
-    return None, None
+    return (images, labels)
 
 
 def get_model():
