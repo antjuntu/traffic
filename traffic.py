@@ -14,13 +14,15 @@ TEST_SIZE = 0.4
 
 
 def main():
-    #python traffic.py gtsrb-small
+    #python traffic.py gtsrb
     # Check command-line arguments
-    if len(sys.argv) not in [2, 3]:
-        sys.exit("Usage: python traffic.py data_directory [model.h5]")
+    # TODO
+    # if len(sys.argv) not in [2, 3]:
+    #     sys.exit("Usage: python traffic.py data_directory [model.h5]")
 
     # Get image arrays and labels for all image files
-    images, labels = load_data(sys.argv[1])
+    #images, labels = load_data(sys.argv[1])
+    images, labels = load_data('gtsrb-small')
 
     """
     # Split data into training and testing sets
@@ -63,12 +65,33 @@ def load_data(data_dir):
     """
     root = os.getcwd()
     print('root', root)
+    directory_str = os.path.join(root, data_dir)
+    directory = os.fsencode(directory_str)
+    for folder in os.listdir(directory):
+        foldername = os.path.basename(folder)
+        print('foldername', foldername)
+        try:
+            label = int(foldername.decode('utf8'))
+        except:
+            continue
+
+        print(type(foldername), foldername, 'label(int):', label)
+        inner_dir_str = os.path.join(root, data_dir, foldername.decode('utf8'))
+        print('inner_dir_str', inner_dir_str)
+        inner_dir = os.fsdecode(inner_dir_str)
+        
+        for filename in os.listdir(inner_dir):
+            print('filename', type(filename), filename)
+        print('- - - - - - - - - - - -')
+        
     
-    imgPath = os.path.join(root, data_dir, '0', '00000_00000.ppm')
-    print('imgPath', imgPath)
-    img = cv2.imread(imgPath)
-    cv2.imshow('img', img)
-    cv2.waitKey(0)
+    # imgPath = os.path.join(root, data_dir, '0', '00000_00000.ppm')
+    # print('imgPath', imgPath)
+    # img = cv2.imread(imgPath)
+
+    # cv2.imshow('img', img)
+    # cv2.waitKey(0)
+
     return None, None
 
 
