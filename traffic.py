@@ -82,6 +82,8 @@ def load_data(data_dir):
         
         for filename in os.listdir(inner_dir):
             print('filename', type(filename), filename)
+            imgPath = os.path.join(inner_dir_str, filename)
+            print('imgPath', imgPath)
         print('- - - - - - - - - - - -')
         
     
