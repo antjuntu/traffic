@@ -14,6 +14,7 @@ TEST_SIZE = 0.4
 
 
 def main():
+    print(tf.__version__)
     #python traffic.py gtsrb
     # Check command-line arguments
     # TODO
